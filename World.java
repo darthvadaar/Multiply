@@ -41,10 +41,11 @@ public class World{
 		return blessings;
 	}
 	public void createBuildings(){
-		buildings.add(new Building("house", 300, 225, population));
-		buildings.add(new Building("temple", 100, 100, 0));
-		buildings.add(new Building("mine", 500, 100,0));
-		buildings.add(new Building("idle", 500, 415,0));
+		buildings.add(new Building("house", 300, 225, population, 0));
+		buildings.add(new Building("temple", 100, 100, 0, 20));
+		buildings.add(new Building("mine", 500, 100,0, 20));
+		buildings.add(new Building("farm", 300, 10,0, 20));
+		buildings.add(new Building("idle", 500, 415,0, 0));
 	}
 	//----------- Getters and Setters ----------//
 
@@ -84,7 +85,7 @@ public class World{
 		//calculates food and population calculations
 		food -= population;
 		if (food > population){
-			buildings.get(3).population += buildings.get(0).getPopulation()/2;
+			buildings.get(4).population += buildings.get(0).getPopulation()/2;
 		}
 		else{
 			for (Building b : buildings){
@@ -107,7 +108,7 @@ public class World{
 		}
 		population = tot;
 		
-		if (buildings.get(3).getPopulation() <= 0){
+		if (buildings.get(4).getPopulation() <= 0){
 			
 		}
 	}
@@ -116,16 +117,16 @@ public class World{
 		//carries out the actions of each building
 		for (Building b : buildings){
 			if (b.getType().equals("temple")){
-				blessings += 1;
+				blessings += b.population;
 			}
 			else if (b.getType().equals("farm")){
-				food += 1;
+				food += b.population;
 			}
 			else if (b.getType().equals("mine")){
-				metal += 1;
+				metal += b.population;
 			}
 			else if (b.getType().equals("house")){
-				population += 1;
+				population += b.population;
 			}
 		}
 		

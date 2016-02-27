@@ -5,15 +5,16 @@ import javax.swing.*;
 public class Building{
 	public String type;
 	public boolean built;
-	public int population, x, y;
+	public int population, x, y, cost;
 	public World world;
 	public Image image;
 	
-	public Building(String type, int x, int y, int population){
+	public Building(String type, int x, int y, int population, int cost){
 		this.type = type;
 		this.x = x;
 		this.y = y;
 		this.population = population;
+		this.cost = cost;
 		if (type.equals("house")){
 			this.built = true;	
 		}
@@ -24,14 +25,14 @@ public class Building{
 		if (type.equals("temple")){
 			image = new ImageIcon("temple.png").getImage();			
 		}
-		else if (type.equals("cave")){
+		else if (type.equals("mine")){
 			image = new ImageIcon("mine.png").getImage();			
 		}
 		else if(type.equals("farm")){
 			image = new ImageIcon("farm.gif").getImage();
 		}
 		else if(type.equals("house")){
-			image = new ImageIcon("house.jpeg").getImage();
+			image = new ImageIcon("house.png").getImage();
 		}
 		
 	}
