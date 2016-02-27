@@ -44,7 +44,7 @@ public class World{
 		buildings.add(new Building("house", 300, 225, population));
 		buildings.add(new Building("temple", 100, 100, 0));
 		buildings.add(new Building("mine", 500, 100,0));
-		buildings.add(new Building("idle", 500, 100,0));
+		buildings.add(new Building("idle", 500, 415,0));
 	}
 	//----------- Getters and Setters ----------//
 
@@ -83,12 +83,15 @@ public class World{
 	public void calcResources(){
 		//calculates food and population calculations
 		food -= population;
-		if (food > 0){
+		if (food > population){
 			buildings.get(3).population += buildings.get(0).getPopulation()/2;
 		}
 		else{
 			for (Building b : buildings){
 				b.population -= 1;		
+			}
+			if (food < 0){
+				food = 0;
 			}
 		}
 		if (population < 0){

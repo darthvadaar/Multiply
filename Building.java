@@ -7,23 +7,31 @@ public class Building{
 	public boolean built;
 	public int population, x, y;
 	public World world;
-	Image image;
+	public Image image;
 	
 	public Building(String type, int x, int y, int population){
 		this.type = type;
 		this.x = x;
 		this.y = y;
 		this.population = population;
-		this.built = false;
+		if (type.equals("house")){
+			this.built = true;	
+		}
+		else{
+			this.built = false;	
+		}
 		
 		if (type.equals("temple")){
 			image = new ImageIcon("temple.png").getImage();			
 		}
 		else if (type.equals("cave")){
-			image = new ImageIcon("cave.png").getImage();			
+			image = new ImageIcon("mine.png").getImage();			
 		}
 		else if(type.equals("farm")){
 			image = new ImageIcon("farm.gif").getImage();
+		}
+		else if(type.equals("house")){
+			image = new ImageIcon("house.jpeg").getImage();
 		}
 		
 	}
