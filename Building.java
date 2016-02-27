@@ -35,6 +35,10 @@ public class Building{
 		this.population += n;
 	}
 	
+	public void killHalf(){
+		this.population /= 2;
+	}
+	
 	
 	
 }
