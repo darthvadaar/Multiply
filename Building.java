@@ -2,7 +2,8 @@
 
 public class Building{
 	private String type;
-	private int population;
+	private int population, x, y;
+	private World world;
 	
 	public Building(String type, int x, int y, int population, World world){
 		this.type = type;
@@ -20,16 +21,16 @@ public class Building{
 	
 	public void action(){
 		if (this.type.equals("temple")){
-			world.blessing += 1;
+			world.setBlessings(world.getBlessings() + 1);
 		}
 		else if (this.type.equals("farm")){
-			world.food += 1;
+			world.setFood(world.getFood() + 1);
 		}
 		else if (this.type.equals("mine")){
-			world.metal += 1;
+			world.setMetal(world.getMetal() + 1);
 		}
 		else if (this.type.equals("house")){
-			world.population += 1;
+			world.setPopulation(world.getPopulation() + 1);
 		}
 	}
 	

@@ -66,9 +66,17 @@ public class World{
 	
 	public void calcResources(){
 		this.food -= this.population;
+		if (food < 0){
+			food = -1;
+			
+		}
 		popROC = this.food/this.population; // rate of change is dependent of food availability;
-		System.out.println(popROC);
 		this.population += popROC;
+		if (this.population < 0){
+			System.out.println("GAME OVER!");
+			//END GAME HERE!
+			
+		}
 		
 	}
 }
