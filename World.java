@@ -25,14 +25,8 @@ public class World{
 	public int getFood(){
 		return food;
 	}
-	public void setFood(int amount){
-		food += amount;
-	}
 	public int getMetal(){
 		return metal;
-	}
-	public void setMetal(int amount){
-		metal += amount;
 	}
 	public int getBlessings(){
 		return blessings;
@@ -63,15 +57,16 @@ public class World{
 	}
 	
 	public void endDay(){
-		day += 1;
-		if (day % 10 == 0 ){
+		if (day % 7 == 0 && day != 0 ){
 			collectTax();
 			//put a prompt saying tax has been collected
 		}
-		if (day % 15 == 0){
+		if (day % 10 == 0 && day != 0){
 			roll();			
 		}
 		calcResources();
+		action();
+		day += 1;
 	}
 	
 	public void collectTax(){
@@ -83,6 +78,10 @@ public class World{
 	
 	public void calcResources(){
 		//calculates food and population calculations
+		if (population < 0){
+			System.out.println("GAME OVER!");
+			System.exit(0);
+		}
 		food -= population;
 		if (food > population){
 			buildings.get(4).population += buildings.get(0).getPopulation()/2;
@@ -95,40 +94,44 @@ public class World{
 				food = 0;
 			}
 		}
-		if (population < 0){
-			System.out.println("GAME OVER!");
-			System.exit(0);
-		}
+
 	}
 	
 	public void updatePop(){
 		int tot = 0;
 		for (Building b : buildings){
-			tot += b.population; 			
+			tot += b.population;		
 		}
 		population = tot;
-		
-		if (buildings.get(4).getPopulation() <= 0){
-			
-		}
 	}
 	
 	public void action(){
 		//carries out the actions of each building
 		for (Building b : buildings){
-			if (b.getType().equals("temple")){
-				blessings += b.population;
+			if (b.getType().equals("temple") && b.built){
+				System.out.println(b.population);
+				if (b.population > population/3){	//1/3 of population must be priests for blessing to go up
+					blessings += b.population;	
+				}
+				else{
+					blessings -= 1;	
+				}
 			}
-			else if (b.getType().equals("farm")){
+			else if (b.getType().equals("farm") && b.built){
 				food += b.population;
 			}
-			else if (b.getType().equals("mine")){
+			else if (b.getType().equals("mine") && b.built){
 				metal += b.population;
 			}
-			else if (b.getType().equals("house")){
+			else if (b.getType().equals("house") && b.built){
 				population += b.population;
 			}
 		}
-		
 	}
+
+
+
+
+
+
 }

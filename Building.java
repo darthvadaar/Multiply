@@ -15,7 +15,7 @@ public class Building{
 		this.y = y;
 		this.population = population;
 		this.cost = cost;
-		if (type.equals("house")){
+		if (type.equals("house") || type.equals("idle")){
 			this.built = true;	
 		}
 		else{
@@ -23,7 +23,7 @@ public class Building{
 		}
 		
 		if (type.equals("temple")){
-			image = new ImageIcon("temple.png").getImage();			
+			image = new ImageIcon("temple.png").getImage();
 		}
 		else if (type.equals("mine")){
 			image = new ImageIcon("mine.png").getImage();			

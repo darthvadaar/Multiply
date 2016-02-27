@@ -62,7 +62,7 @@ class GamePanel extends JPanel implements MouseMotionListener, MouseListener, Ke
 	private int mousex,mousey;
 	private World world;
 	private boolean mousedown;
-	private Building selectedBuild=null;
+	private Building selectedBuild = null;
 	private ArrayList<Particle> particles = new ArrayList<Particle>();
 	public GamePanel(Game m){
 		world=new World();
@@ -96,9 +96,8 @@ class GamePanel extends JPanel implements MouseMotionListener, MouseListener, Ke
 
     public void keyPressed(KeyEvent e) {
     	if(e.getKeyCode()==KeyEvent.VK_N && keys[KeyEvent.VK_N]!=true){
-    		world.calcResources();
-			world.updatePop();	
-			world.action();
+    		world.endDay();
+			world.updatePop();
     	}
     	else if(keys[KeyEvent.VK_ENTER]!=true&&selectedBuild!=null){
     		selectedBuild.built=true;
