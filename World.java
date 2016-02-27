@@ -60,9 +60,9 @@ public class World{
 	}
 	
 	public void createBuildings(){
-		buildings.add(new Building("house", 100,500, population, this));
-		buildings.add(new Building("temple", 100,100, 0, this));
-		buildings.add(new Building("mine",500,100,0, this));
+		buildings.add(new Building("house", 100,500, population));
+		buildings.add(new Building("temple", 100,100, 0));
+		buildings.add(new Building("mine",500,100,0));
 	}
 	
 	public void collectTax(){
@@ -85,5 +85,20 @@ public class World{
 			//END GAME HERE!
 		}
 		
+	}
+	
+	public void action(Building b){
+		if (b.getType().equals("temple")){
+			blessings += 1;
+		}
+		else if (b.getType().equals("farm")){
+			food += 1;
+		}
+		else if (b.getType().equals("mine")){
+			metal += 1;
+		}
+		else if (b.getType().equals("house")){
+			population += 1;
+		}
 	}
 }
