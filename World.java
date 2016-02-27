@@ -58,7 +58,9 @@ public class World{
 	}
 	
 	public void calcResources(){
-		popROC = this.food - this.population; // rate of change is dependent of food availability;
+		this.food -= this.population;
+		popROC = this.food/this.population; // rate of change is dependent of food availability;
+		System.out.println(popROC);
 		this.population += popROC;
 		
 	}

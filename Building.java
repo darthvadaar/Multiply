@@ -4,8 +4,10 @@ public class Building{
 	private String type;
 	private int population;
 	
-	public Building(String type, int population, World world){
+	public Building(String type, int x, int y, int population, World world){
 		this.type = type;
+		this.x = x;
+		this.y = y;
 		this.population = population;
 		
 	}
