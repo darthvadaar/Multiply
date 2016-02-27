@@ -1,7 +1,8 @@
-import java.util.Random;
+import java.util.*;
 public class World{
-	private int population,food,blessings,metal,lumber, popROC;
-	private Random random = new Random();
+	public int population,food,blessings,metal,lumber, popROC;
+	public ArrayList<Building> buildings = new ArrayList<Building>();
+	public Random random = new Random();
 	
 	public World(){
 		population = 2;
@@ -9,6 +10,7 @@ public class World{
 		blessings = 50;
 		metal = 100;
 		lumber = 100;
+		createBuildings();
 
 	}
 	
@@ -57,6 +59,12 @@ public class World{
 		}
 	}
 	
+	public void createBuildings(){
+		buildings.add(new Building("house", 100,500, population, this));
+		buildings.add(new Building("temple", 100,100, 0, this));
+		buildings.add(new Building("mine",500,100,0, this));
+	}
+	
 	public void collectTax(){
 		//run after a set amount of time
 		//takes out 25% of lumber and food
@@ -65,17 +73,16 @@ public class World{
 	}
 	
 	public void calcResources(){
-		this.food -= this.population;
-		if (food < 0){
-			food = -1;
-			
+		food -= population;
+		if (food > 0){
+			population += buildings.get(0).getPopulation()/2;
 		}
-		popROC = this.food/this.population; // rate of change is dependent of food availability;
-		this.population += popROC;
-		if (this.population < 0){
+		else{
+			population -= 1;
+		}
+		if (population < 0){
 			System.out.println("GAME OVER!");
 			//END GAME HERE!
-			
 		}
 		
 	}
