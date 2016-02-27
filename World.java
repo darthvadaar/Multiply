@@ -47,7 +47,13 @@ public class World{
 	//----------- Getters and Setters ----------//
 
 	public void roll(){
+		int chance = random.nextInt(blessings);
+		if (chance < 20){
+			population /= 2;
+		}
+		else if(chance > 50){
 			
+		}
 	}
 	
 	public void collectTax(){
