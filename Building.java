@@ -1,4 +1,4 @@
-//Building class
+//Building class handles each building
 
 public class Building{
 	private String type;

@@ -1,8 +1,9 @@
 import java.util.Random;
 public class World{
-	private int population,food,blessings,metal,lumber;
+	private int population,food,blessings,metal,lumber, popROC;
 	private Random random = new Random();
-	public World{
+	
+	public World(){
 		population = 2;
 		food = 100;
 		blessings = 50;
@@ -10,12 +11,14 @@ public class World{
 		lumber = 100;
 
 	}
+	
+	
 	//----------- Getters and Setters ----------//
 	public int getPopulation(){
 		return population;
 	}
 	public void setPopulation(int amount){
-		population += amount;
+		population = amount;
 	}
 	public int getFood(){
 		return food;
@@ -38,12 +41,25 @@ public class World{
 	public int getBlessings(){
 		return blessings;
 	}
-	public void setBlessings(int amount){
+	public int setBlessings(int amount){
 		return blessings;
 	}
 	//----------- Getters and Setters ----------//
 
 	public void roll(){
 			
+	}
+	
+	public void collectTax(){
+		//run after a set amount of time
+		//takes out 25% of lumber and food
+		this.metal *= 0.75;
+		this.food *= 0.75;
+	}
+	
+	public void calcResources(){
+		popROC = this.food - this.population; // rate of change is dependent of food availability;
+		this.population += popROC;
+		
 	}
 }
