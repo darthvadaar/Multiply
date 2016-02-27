@@ -52,7 +52,8 @@ public class World{
 			population /= 2;
 		}
 		else if(chance > 50){
-			
+			metal *= 1.5;
+			food *= 1.5;
 		}
 	}
 	
