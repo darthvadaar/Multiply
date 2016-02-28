@@ -18,8 +18,14 @@ public class Particle {
     public void move(){
     	x+=vx;
     	y+=vy;
+    	
     } 
-    
+    public void calculate(int mx,int my){
+    		
+    	x+=vx;
+    	y+=vy;
+    	
+    } 
     
     
 }

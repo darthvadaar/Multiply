@@ -14,7 +14,7 @@ import java.awt.MouseInfo;
 import java.util.ArrayList;
 
 public class Game extends JFrame implements ActionListener{
-	public Timer myTimer;
+	public Timer myTimer;   
 	GamePanel game;
 		
     public Game() {
@@ -57,14 +57,19 @@ class GamePanel extends JPanel implements MouseMotionListener, MouseListener, Ke
 	private boolean []keys;
 	private Image islandImg;
 	private Font font = new Font("Helvetica", Font.BOLD, 20);
+	private Font font3 = new Font("Cooper Black", Font.BOLD, 15);
 	private Font font2 = new Font("Cooper Black", Font.BOLD, 20);
 	private Game mainFrame;
-	private int mousex,mousey;
+	private int mousex,mousey,transfer;
 	private World world;
 	private boolean mousedown;
-	private Building selectedBuild = null;
+	private boolean mouse2down;
+	private Timer popTimer;
+	private Building selectedBuild=null;
 	private ArrayList<Particle> particles = new ArrayList<Particle>();
+	
 	public GamePanel(Game m){
+		
 		world=new World();
 		addMouseMotionListener(this);
 		addMouseListener(this);
@@ -73,6 +78,12 @@ class GamePanel extends JPanel implements MouseMotionListener, MouseListener, Ke
 		mainFrame = m;
 		setSize(1024,720);
         addKeyListener(this);
+        popTimer = new Timer(3000, new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					nextDay();
+				}
+			});
+		popTimer.start();
 	}
     public void addNotify() {
         super.addNotify();
@@ -84,24 +95,33 @@ class GamePanel extends JPanel implements MouseMotionListener, MouseListener, Ke
 	
 	
 	public void move(){
-		for (Particle particle:particles){
-			particle.move();
-		}
 	}
 	
 	
 	
 	
     public void keyTyped(KeyEvent e) {}
-
+	public void nextDay() {
+			world.endDay();
+			world.updatePop();
+			}
     public void keyPressed(KeyEvent e) {
     	if(e.getKeyCode()==KeyEvent.VK_N && keys[KeyEvent.VK_N]!=true){
-    		world.endDay();
-			world.updatePop();
+			// popTimer = new Timer(3000, nextDay());
+			
+			
     	}
-    	else if(keys[KeyEvent.VK_ENTER]!=true&&selectedBuild!=null){
+    	else if(e.getKeyCode()==KeyEvent.VK_ENTER &&keys[KeyEvent.VK_ENTER]!=true && selectedBuild!=null&&world.metal >selectedBuild.cost){
     		selectedBuild.built=true;
+    		world.metal-=selectedBuild.cost;
     	}
+//    	else if(e.getKeyCode()==KeyEvent.VK_T &&keys[KeyEvent.VK_T]!=true&&selectedBuild.built==true){
+//    		transfer=Integer.parseInt(JOptionPane.showInputDialog("Amount of people to transfer"));
+//    		if (transfer>selectedBuild.population){
+//    			transfer=selectedBuild.population;
+//    		}
+//    		selectedBuild.population-=transfer;
+//    	}
         keys[e.getKeyCode()] = true;
     }
     
@@ -118,7 +138,12 @@ class GamePanel extends JPanel implements MouseMotionListener, MouseListener, Ke
     	 
     public void mousePressed(MouseEvent e){	
 		System.out.println(" "+mousex+" "+mousey);
-		mousedown=true;
+		if(SwingUtilities.isLeftMouseButton(e)){
+			mousedown=true;
+		}
+		if(SwingUtilities.isRightMouseButton(e)){
+			mouse2down=true;
+		}
 	}
     
     
@@ -137,7 +162,8 @@ class GamePanel extends JPanel implements MouseMotionListener, MouseListener, Ke
 		g.fillRect(0,0,1024,720);//}
 		g.setColor(Color.green);  
 		g.drawImage(islandImg,-400,-100,this);
-
+		g.setColor(Color.red);
+		g.fillRect(500,415,100,100);
 		//g.fillRect((int)proj.x, (int)proj.y, 20, 20);
 		//g.drawOval(100-20, 100-20, 2*20, 2*20);
 		//g.drawOval((int)proj.x-20, (int)proj.y-20, 2*20, 2*20);
@@ -152,6 +178,9 @@ class GamePanel extends JPanel implements MouseMotionListener, MouseListener, Ke
 					g.fillRect(mousex, mousey, 200, 100);
 					g.setColor(new Color(0,0,0));
 					g.drawRect(mousex, mousey, 200, 100);
+					g.setFont(font3);
+					g.setColor(new Color(0,0,0));
+					g.drawString("Cost: " +building.cost,mousex+10, mousey+20);
 					if (mousedown){
 						selectedBuild=building;
 					}
@@ -165,12 +194,32 @@ class GamePanel extends JPanel implements MouseMotionListener, MouseListener, Ke
 			}
 			else{ //buildings already made
 				g.drawImage(building.image,building.x, building.y,this);
-				
+				if (pointrectcollide(mousex,mousey,building.x, building.y,100,100)){
+					g.setColor(new Color(255, 255, 255, 120));
+					g.fillRect(mousex, mousey, 200, 100);
+					g.setColor(new Color(0,0,0));
+					g.drawRect(mousex, mousey, 200, 100);
+					g.setFont(font3);
+					g.setColor(new Color(0,0,0));
+					g.drawString("Population:" +building.population,mousex+10, mousey+20);
+					if (mousedown){
+						selectedBuild=building;
+						selectedBuild.population+=transfer;
+						transfer=0;
+					}
+					if (mouse2down&&building.population>0){
+						transfer+=1;
+						building.population-=1;
+					}
+					
+				}
 			}
 			
 			
 		}
-		if(selectedBuild!=null){	
+		
+		if(selectedBuild!=null&&selectedBuild.built==false){
+		//	if 	(selectedBuild.built==false)
 			
 			g.setColor(new Color(255,255,255));
 			g.fillRect(0,600,1024, 200);
@@ -178,8 +227,18 @@ class GamePanel extends JPanel implements MouseMotionListener, MouseListener, Ke
 			g.setColor(new Color(0,0,0));
 			g.drawString("Are you sure you want to build a " +selectedBuild.type.toUpperCase()+" (PRESS ENTER TO ACCEPT).",0,650);
 		}
+		if (selectedBuild!=null){			
+			g.setColor(Color.black);
+			g.drawRect(selectedBuild.x,selectedBuild.y,100, 100);
+		
+		}			
+		for (int i =0;i<transfer;i++){
+			g.fillOval(i*7+mousex-2,20+mousey-2, 2*2, 2*2);
+		}
+		//g.drawOval(100-20, 100-20, 2*20, 2*20);		
 		g.setColor(Color.white);
 		g.setFont(font2);
+		
 		g.drawString("Population: "+ world.population,20,20);
 		
 		g.drawString("Food: "+ world.food,20,40);
@@ -188,9 +247,10 @@ class GamePanel extends JPanel implements MouseMotionListener, MouseListener, Ke
 		
 		g.drawString("Blessings: "+ world.blessings,20,80);
 		
-   			
+   		g.drawString("Day: "+ world.day,800,20);	
 		
 		mousedown=false;
+		mouse2down=false;
 		
     }
     public boolean pointrectcollide(int x,int y,int rectx,int recty,int w,int h){

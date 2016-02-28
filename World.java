@@ -1,4 +1,5 @@
 import java.util.*;
+import java.applet.*;
 public class World{
 	public int population,food,blessings, metal, day;
 	public ArrayList<Building> buildings = new ArrayList<Building>();
@@ -37,8 +38,8 @@ public class World{
 	public void createBuildings(){
 		buildings.add(new Building("house", 300, 225, population, 0));
 		buildings.add(new Building("temple", 100, 100, 0, 20));
-		buildings.add(new Building("mine", 500, 100,0, 20));
-		buildings.add(new Building("farm", 300, 10,0, 20));
+		buildings.add(new Building("mine", 500, 100,0, 15));
+		buildings.add(new Building("farm", 300, 10,0, 100));
 		buildings.add(new Building("idle", 500, 415,0, 0));
 	}
 	//----------- Getters and Setters ----------//
@@ -49,8 +50,15 @@ public class World{
 			for (Building b : buildings){
 				b.killHalf();
 			}
+			AudioClip scream= Applet.newAudioClip(getClass().getResource("scream.wav"));
+    		scream.play();
+    		System.out.println("DEATH");
 		}
 		else if(chance > 50){
+			//BLESSED
+			
+			AudioClip blessed= Applet.newAudioClip(getClass().getResource("blessed.wav"));
+    		blessed.play();
 			metal *= 1.5;
 			food *= 1.5;
 		}
@@ -72,13 +80,15 @@ public class World{
 	public void collectTax(){
 		//run after a set amount of time
 		//takes out 25% of lumber and food
+		AudioClip chaching= Applet.newAudioClip(getClass().getResource("chaching.wav"));
+    	chaching.play();
 		this.metal *= 0.75;
 		this.food *= 0.75;
 	}
 	
 	public void calcResources(){
 		//calculates food and population calculations
-		if (population < 0){
+		if (population <= 0){
 			System.out.println("GAME OVER!");
 			System.exit(0);
 		}
@@ -88,11 +98,16 @@ public class World{
 		}
 		else{
 			for (Building b : buildings){
-				b.population -= 1;		
+				if (b.population > 0){
+					b.population -= 1;		
+				}
+					
 			}
-			if (food < 0){
-				food = 0;
-			}
+		}
+		
+		food += buildings.get(3).population;
+		if (food < 0){
+			food = 0;
 		}
 
 	}
@@ -103,13 +118,15 @@ public class World{
 			tot += b.population;		
 		}
 		population = tot;
+		if (population < 0){
+			System.exit(0);
+		}
 	}
 	
 	public void action(){
 		//carries out the actions of each building
 		for (Building b : buildings){
 			if (b.getType().equals("temple") && b.built){
-				System.out.println(b.population);
 				if (b.population > population/3){	//1/3 of population must be priests for blessing to go up
 					blessings += b.population;	
 				}
